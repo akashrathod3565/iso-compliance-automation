@@ -42,8 +42,44 @@ if menu == "Dashboard":
     # -----------------------------
     # Load Suppliers from Excel
     # -----------------------------
-    if st.button("Load Suppliers from Excel"):
-        df_excel = pd.read_excel("suppliers.xlsx")
+    st.subheader("Upload Supplier Excel")
+
+    uploaded_excel = st.file_uploader(
+        "Upload Supplier Excel File",
+        type=["xlsx"],
+        key="supplier_excel_upload"
+        )
+
+    if uploaded_excel:
+
+        df_excel = pd.read_excel(uploaded_excel)
+
+        required_columns = [
+                "Supplier Number",
+                "Supplier Name",
+                "Email",
+                "Phone"
+            ]
+
+        if not all(col in df_excel.columns for col in required_columns):
+            st.error("Excel must contain required columns.")
+        else:
+            for _, row in df_excel.iterrows():
+                insert_supplier((
+                        row["Supplier Number"],
+                        row["Supplier Name"],
+                        row["Email"],
+                        row["Phone"],
+                        0,
+                        None,
+                        None,
+                        "Pending",
+                        0,
+                        None
+                    ))
+
+            st.success("Suppliers Loaded Successfully!")
+        
 
         for _, row in df_excel.iterrows():
             insert_supplier((
