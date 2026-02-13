@@ -195,12 +195,12 @@ if menu == "Upload Certificate":
             st.error("Supplier not found in database.")
         else:
             st.success(f"Supplier Found: {supplier[1]}")
-
             uploaded_file = st.file_uploader(
-                "Upload ISO Certificate",
-                type=["pdf", "jpg", "jpeg", "png"],
+                "Upload ISO Certificate (PDF only for cloud)",
+                type=["pdf"],
                 key="upload_file"
             )
+
 
             if uploaded_file:
 

@@ -1,13 +1,15 @@
 import pdfplumber
-import pytesseract
-from PIL import Image
 import re
 from datetime import datetime
 import os
 
-
-# If Windows, set path like this:
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# Try importing pytesseract safely
+try:
+    import pytesseract
+    from PIL import Image
+    OCR_AVAILABLE = True
+except:
+    OCR_AVAILABLE = False
 
 
 def extract_text_from_file(file_path):
@@ -23,6 +25,9 @@ def extract_text_from_file(file_path):
                     text += page_text
 
     elif file_path.lower().endswith((".jpg", ".jpeg", ".png")):
+
+        if not OCR_AVAILABLE:
+            raise Exception("OCR not available in cloud deployment.")
 
         image = Image.open(file_path)
         text = pytesseract.image_to_string(image)
